@@ -1,0 +1,161 @@
+#!/bin/bash
+#usage ./giffer filename            without gif extension
+#Tecan
+
+gifspeed="0.250"	#0.250 default
+gifspeed="1.8" #0.3 about asfast as it goes/ uses alot of resources just turn up delay between loops    --> #0.80 default more for slower
+gifdelay="0.1"; #0.1 default #between loopsammounts
+loopammount="2" # loop x times and then pause for a while
+delay="2000"; #2000 default #between loops
+screen="spanned" # for multiple screens
+#screen="spanned"
+
+#save resources
+#without weather
+bWeather=1
+dlWeather=0  # need a checker here you have to run this atleast once to find the pics.
+#todo older than auto download new weather
+#maybe a weather delay for longer gifs
+
+#todo  self watch for high process cpu usage for long time
+if [ -d ./png ]; then
+	mkdir png
+fi
+
+name1=$1;
+if [ "$name1" = "" ]; then
+name1="light"
+fi
+
+#if [ -e "/home/Dev/g.jpg" ];then  x++ ; fi # check if file exists
+
+ffmpeg -i "./$name1.gif" -s 1500x1000 "./png/$name1-%1d.jpg" #-s 1500x1000 -s 420x300
+
+#-s 420x200  for wide pictures
+#-s 300x300 for reqular pics
+# -s 200x100   nice for low quality resources large pixels
+#frames=$(identify -format %n "./$name1.gif")#was being wack so rewrote file checking for gif output in while loop
+#echo "frames $frames"
+
+
+#forcast wget http://xml.customweather.com/xml?client=MF_mobile&client_password=cWm0b!le&product=maps&map_product=forecastconditions&id=106832&metric=true&language=en&thumb=false
+
+if [ "$bWeather" = "1" ]; then
+	if [ "$dlWeather" = "1" ]; then #make to function call later
+		#http://images.myforecast.com/images/cw/satellite/usa/usa_anim.gif
+		rm Russia_anim.gif
+		wget http://images.myforecast.com/images/cw/satellite/Russia/Russia_anim.gif
+		#http://images.myforecast.com/images/cw/satellite/Europe/Europe_anim.gif
+		#http://images.myforecast.com/images/cw/satellite/SouthPacific/SouthPacific_anim.gif
+		#http://images.myforecast.com/images/cw/satellite/Australia/Australia_anim.gif
+		#todo date the gifs maybe chunk them together for longer week animations
+
+		rm avn-animated.gif
+		#new ones they removed ceus
+		#http://radar.weather.gov/radar.php?rid=ddc&product=N0R&loop=yes
+		#http://icons.wxug.com/data/640x480/2xus_ozone.gif
+		wget -O avn-animated.gif http://php-proxy.net/index.php?q=aHR0cDovL3d3dy5zc2Qubm9hYS5nb3YvZ29lcy9jb21wL2NldXMvYXZuLWFuaW1hdGVkLmdpZg%3D%3D&hl=3ed &
+		sleep  10
+		killall wget
+
+		rm avn-animated.gif
+		#wget http://www.ssd.noaa.gov/goes/comp/ceus/avn-animated.gif
+		rm Canada_anim.gif
+		wget http://images.myforecast.com/images/cw/satellite/Canada/Canada_anim.gif
+		sleep  20
+		killall wget
+	fi	#download new weather if
+
+
+	name="Russia_anim"
+	#fc=$(identify -format %n "./$name.gif")
+	ffmpeg -i "./$name.gif" "./png/$name-%1d.jpg"
+	loop=true;fc=1;
+	while ( $loop );do
+	if [ -e "$(pwd)/png/$name1-$fc.jpg" ];then
+	fc=$[$fc+1]
+	else loop=false;fi;done
+	for ((number=1;number<$fc;number++));do convert "./png/$name1-$number.jpg"  "./png/$name-$number.jpg" -geometry +420+10 -gravity NorthEast -matte -channel a -evaluate set 20% -composite "./png/$name1-$number.jpg";done
+
+
+	name="Canada_anim"
+	#fc=$(identify -format %n "./$name.gif")
+	ffmpeg -i "./$name.gif" "./png/$name-%1d.jpg"
+		loop=true;fc=1;
+		while ( $loop );do
+			if [ -e "$(pwd)/png/$name1-$fc.jpg" ];then
+			fc=$[$fc+1]
+			#echo $number;
+		else loop=false;fi;done;
+	for ((number=1;number<$fc;number++));do convert "./png/$name1-$number.jpg"  "./png/$name-$number.jpg" -geometry +10+10 -gravity NorthEast -matte -channel a -evaluate set 20% -composite "./png/$name1-$number.jpg";done
+
+
+	name="avn-animated"
+	#fc=$(identify -format %n "./$name.gif")
+	ffmpeg -i "./$name.gif" "./png/$name-%1d.jpg"
+	loop=true;fc=1;
+	while ( $loop );do
+		if [ -e "$(pwd)/png/$name1-$fc.jpg" ];then
+		fc=$[$fc+1]
+		#echo $number;
+	else loop=false;fi;done
+	for ((number=1;number<$fc;number++));do convert "./png/$name1-$number.jpg"  "./png/$name-$number.jpg" -geometry +10+300 -gravity NorthEast -matte -channel a -evaluate set 20% -composite -pointsize 20 -fill yellow -draw 'text 20,40 "Sunset over the Nile" ' -draw 'text 20,70 "Sunset over the Nile" '	-draw 'text 20,110 "Sunset over the Nile" '  "./png/$name1-$number.jpg";done
+fi # end of weather loop
+
+
+
+
+loop=true
+number=1
+
+
+	#mate stuff
+	while :; do 
+		for (( x=1;x<$[$loopammount+1];x++ )); do
+			dconf write /org/mate/desktop/background/picture-options "\"$screen\""
+			while ( $loop );do
+				if [ -e "$(pwd)/png/$name1-$number.jpg" ];then
+					dconf write /org/mate/desktop/background/picture-filename "\"$(pwd)/png/$name1-$number.jpg\""
+					number=$[$number+1]
+					echo $number;
+				else
+					number=1
+					loop=false
+				fi
+
+
+			#in the while loop check if its a new day and download new weather
+			#while :; do 
+			#for ((x=1;x<$loopammount+1;x++)); do
+			#dconf write /org/mate/desktop/background/picture-options "\"$screen"\"
+			#for ((number=1;number<$frames+1;number++));do echo $(pwd)"/png/$name1-$number.jpg";
+			#dconf write /org/mate/background/picture-filename $(pwd)"/png/$name1-$number.jpg"
+			#gnome stuff
+			#gsettings set org.mate.background picture-filename $(pwd)"/png/$name1-$number.jpg";
+			#gsettings set org.mate.desktop.background picture-options $screen;
+				sleep $gifspeed;
+			done;
+			loop=true
+
+			echo "setting picture back to frame 1";
+
+		#gsettings set org.mate.background picture-filename "";
+		done
+		sleep $delay;
+	done
+
+
+#could possibly set back to original by reading keyname from dconf here too
+
+#other stuff not relivent
+#echo $(pwd)"/png/$name1-$number.png"
+#name1=grass;ffmpeg -i "./$name1.gif" "/png/$name1-%1d.jpg" #-s 420x300
+#ffmpeg -i input.flv -ss 00:00:00.000 -pix_fmt rgb24 -r 10 -s 320x240 -t 00:00:10.000  output.gif
+
+
+#ffmpeg -i "./$name1.gif" -s 1500x1000 "./png/$name1d.gif"
+
+
+#for ((number=1;number<15;number++));do convert $(pwd)"/png/$name1-$number.jpg" -coalesce -gravity NorthEast -draw 'image over 10,10,0,0 "./png/Canada_anim-$number.jpg"' -layers Optimize "out-$number.jpg";done
+
+#convert anim1.gif +repage -coalesce null: \( anim2.gif -coalesce \) -geometry +100+0 -layers Composite anim1+2.gif
