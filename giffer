@@ -8,7 +8,7 @@
 gifspeed="0.250"	#0.250 default
 gifspeed="1.8" #0.3 about asfast as it goes/ uses alot of resources just turn up delay between loops    --> #0.80 default more for slower
 gifdelay="0.1"; #0.1 default #between loopsammounts
-loopammount="2" # loop x times and then pause for a while
+loopammount="20" # loop x times and then pause for a while
 delay="2000"; #2000 default #between loops
 screen="spanned" # for multiple screens
 #screen="spanned"
