@@ -15,13 +15,14 @@ screen="spanned" # for multiple screens
 
 #save resources
 #without weather
-bWeather=0
+bWeather=1
 dlWeather=1  # need a checker here you have to run this atleast once to find the pics.
 #todo older than auto download new weather
 #maybe a weather delay for longer gifs
 
+
 #todo  self watch for high process cpu usage for long time
-if [ -d ./png ]; then
+if [ ! -d "./png" ]; then
 	mkdir png
 fi
 
@@ -52,7 +53,7 @@ if [ "$bWeather" = "1" ]; then
 	if [ "$(cat config)" != "$(date +%j)" ]; then 
 		if [ "$dlWeather" = "1" ]; then #make to function call later
 			#http://images.myforecast.com/images/cw/satellite/usa/usa_anim.gif
-			rm Russia_anim.gif
+			rmwget Russia_anim.gif
 			wget http://images.myforecast.com/images/cw/satellite/Russia/Russia_anim.gif
 			#http://images.myforecast.com/images/cw/satellite/Europe/Europe_anim.gif
 			#http://images.myforecast.com/images/cw/satellite/SouthPacific/SouthPacific_anim.gif
