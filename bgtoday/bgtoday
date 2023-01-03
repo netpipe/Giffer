@@ -49,35 +49,49 @@ do
     continue
   fi
 # Depending on time set THEME_CHOICE & NEXT_TIME
-  if [ "$CURRENT_TIME" -ge 0000 ] && [ "$CURRENT_TIME" -lt 0630 ]; then
-    THEME_CHOICE=Mint-Y-Dark-Grey
+  if [ "$CURRENT_TIME" -ge 0000 ] && [ "$CURRENT_TIME" -lt 0420 ]; then
+    THEME_CHOICE=BlackMATE
+    THEME_CHOICE2=custom1
     WALL_CHOICE=/ubuntu2_by_arman1992.jpg
-        WALL_CHOICE2=/284466.jpg
+    WALL_CHOICE2=/284466.jpg
+    NEXT_TIME=0420
+  elif [ "$CURRENT_TIME" -ge 0420 ] && [ "$CURRENT_TIME" -lt 0630 ]; then
+    THEME_CHOICE=BlackMATE
+    THEME_CHOICE2=custom1
+    WALL_CHOICE=/DSC2943_by_kcpru.jpg
+    WALL_CHOICE2=/1939285.jpg
     NEXT_TIME=0630
   elif [ "$CURRENT_TIME" -ge 0630 ] && [ "$CURRENT_TIME" -lt 1600 ]; then
-    THEME_CHOICE=Mint-Y-Red
+    THEME_CHOICE=BlackMATE
+    THEME_CHOICE2=custom1
     WALL_CHOICE=/DSC2943_by_kcpru.jpg
-        WALL_CHOICE2=/1939285.jpg
-    NEXT_TIME=1600
-      elif [ "$CURRENT_TIME" -ge 0420 ] && [ "$CURRENT_TIME" -lt 1600 ]; then
-    THEME_CHOICE=Mint-Y-Red
-    WALL_CHOICE=/DSC2943_by_kcpru.jpg
-        WALL_CHOICE2=/1939285.jpg
+    WALL_CHOICE2=/1939285.jpg
     NEXT_TIME=1600
   elif [ "$CURRENT_TIME" -ge 1600 ] && [ "$CURRENT_TIME" -le 2359 ]; then
-    THEME_CHOICE=Mint-Y-Dark-Grey
+    THEME_CHOICE=BlackMATE
+    THEME_CHOICE2=custom1
+    #BlackMATE
     WALL_CHOICE=/blue-marble-west.jpg
-        WALL_CHOICE2=/macos-mojave-night-wallpaper-preview.jpg
+    WALL_CHOICE2=/macos-mojave-night-wallpaper-preview.jpg
     NEXT_TIME=0000
   fi
-# Set the chosen theme
- # gsettings set org.cinnamon.desktop.interface gtk-theme "$THEME_CHOICE"
-  #gsettings set org.cinnamon.theme name "$THEME_CHOICE"
- # gsettings set org.cinnamon.desktop.wm.preferences theme "$THEME_CHOICE"
- # gsettings set org.cinnamon.desktop.background picture-uri "file://$WALL_CHOICE"
- 
-  dconf write /org/mate/desktop/background/picture-filename "\"$PWD/""$WALL_CHOICE\""
   
+# Set the chosen theme
+  #gsettings set org.cinnamon.desktop.interface gtk-theme "$THEME_CHOICE"
+  #gsettings set org.cinnamon.theme name "$THEME_CHOICE"
+  #gsettings set org.cinnamon.desktop.wm.preferences theme "$THEME_CHOICE"
+  #gsettings set org.cinnamon.desktop.background picture-uri "file://$WALL_CHOICE"
+ 
+    if (( $1 )) ; then
+        dconf write /org/mate/desktop/background/picture-filename "\"$PWD/""$WALL_CHOICE2\""
+        #dconf write /org/mate/marco/general/theme "\"$THEME_CHOICE\"" Yaru
+        dconf write /org/mate/desktop/interface/gtk-theme "\"$THEME_CHOICE2\""
+    else
+        dconf write /org/mate/desktop/background/picture-filename "\"$PWD/""$WALL_CHOICE\""
+      #  dconf write /org/mate/desktop/interface/gtk-theme "\"$THEME_CHOICE\""   
+        #dconf write /org/mate/desktop/interface/icon-theme "'Suru'"
+        #dconf write /org/mate/desktop/peripherals/mouse/cursor-theme "'crystalgray'"
+    fi
 # Sleep
   sleep 600
 done
