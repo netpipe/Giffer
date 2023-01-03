@@ -67,6 +67,7 @@ do
  # gsettings set org.cinnamon.desktop.background picture-uri "file://$WALL_CHOICE"
  
   dconf write /org/mate/desktop/background/picture-filename "\"$PWD/""$WALL_CHOICE\""
+  
 # Sleep
   sleep 600
 done
