@@ -17,11 +17,11 @@ do
 # Depending on time set THEME_CHOICE & NEXT_TIME
   if [ "$CURRENT_TIME" -ge 0000 ] && [ "$CURRENT_TIME" -lt 0630 ]; then
     THEME_CHOICE=Mint-Y-Dark-Grey
-    WALL_CHOICE=ubuntu2_by_arman1992.jpg
+    WALL_CHOICE=/ubuntu2_by_arman1992.jpg
     NEXT_TIME=0630
   elif [ "$CURRENT_TIME" -ge 0630 ] && [ "$CURRENT_TIME" -lt 1600 ]; then
     THEME_CHOICE=Mint-Y-Red
-    WALL_CHOICE=DSC2943_by_kcpru.jpg
+    WALL_CHOICE=/DSC2943_by_kcpru.jpg
     NEXT_TIME=1600
   elif [ "$CURRENT_TIME" -ge 1600 ] && [ "$CURRENT_TIME" -le 2359 ]; then
     THEME_CHOICE=Mint-Y-Dark-Grey
