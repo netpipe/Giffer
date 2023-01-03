@@ -1,0 +1,40 @@
+#!/bin/dash
+#https://forums.linuxmint.com/viewtopic.php?t=369909
+# Kill if already running
+
+#if pidof -o %PPID -x "${0##*/}"; then
+#  exit 1
+#fi
+# Start loop
+while :
+do
+# What time is it?
+  CURRENT_TIME=$(date +%H%M)
+  if [ -n "$NEXT_TIME" ] && [ "$CURRENT_TIME" -lt "$NEXT_TIME" ]; then
+    sleep 60
+    continue
+  fi
+# Depending on time set THEME_CHOICE & NEXT_TIME
+  if [ "$CURRENT_TIME" -ge 0000 ] && [ "$CURRENT_TIME" -lt 0630 ]; then
+    THEME_CHOICE=Mint-Y-Dark-Grey
+    WALL_CHOICE=/usr/share/backgrounds/ubuntu2_by_arman1992.jpg
+    NEXT_TIME=0630
+  elif [ "$CURRENT_TIME" -ge 0630 ] && [ "$CURRENT_TIME" -lt 1600 ]; then
+    THEME_CHOICE=Mint-Y-Red
+    WALL_CHOICE=/usr/share/backgrounds/DSC2943_by_kcpru.jpg
+    NEXT_TIME=1600
+  elif [ "$CURRENT_TIME" -ge 1600 ] && [ "$CURRENT_TIME" -le 2359 ]; then
+    THEME_CHOICE=Mint-Y-Dark-Grey
+    WALL_CHOICE=/usr/share/backgrounds/cosmos/blue-marble-west.jpg
+    NEXT_TIME=0000
+  fi
+# Set the chosen theme
+ # gsettings set org.cinnamon.desktop.interface gtk-theme "$THEME_CHOICE"
+  #gsettings set org.cinnamon.theme name "$THEME_CHOICE"
+ # gsettings set org.cinnamon.desktop.wm.preferences theme "$THEME_CHOICE"
+ # gsettings set org.cinnamon.desktop.background picture-uri "file://$WALL_CHOICE"
+ 
+  dconf write /org/mate/desktop/background/picture-filename "\"$WALL_CHOICE\""
+# Sleep
+  sleep 600
+done
